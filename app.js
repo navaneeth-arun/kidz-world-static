@@ -1,8 +1,6 @@
 var cartValue = document.getElementById("cart-value");
 var cartButton = document.getElementById("cart");
-
 var addButtons = document.getElementsByClassName("button");
-
 var items = [
   {
     name: "This was our pact",
@@ -87,56 +85,65 @@ var items = [
     quantity: 0,
     dollars: 18,
     cents: 49,
-  },
+  }
 ];
 
-function updateCart() {
-  let cart = 0;
-  for (index = 0; index < items.length; index++) {
-    cart = cart + items[index].quantity;
-  }
-  cartValue.innerHTML = cart;
-}
-
-for (let i = 0; i < addButtons.length; i++) {
-  addButtons[i].onclick = (e) => {
+for(let i=0;i<addButtons.length;i++)
+{
+    addButtons[i].onclick=(e)=>{
     items[i].quantity++;
     updateCart();
-  };
-}
-
-var finalDollars = 0;
-var finalCents = 0;
-
-function updatePrice() {
-  let totalPriceInCents = 0;
-
-  for (index = 0; index < items.length; index++) {
-    totalPriceInCents =
-      totalPriceInCents +
-      items[index].quantity * (items[index].dollars * 100 + items[index].cents);
-  }
-  finalDollars = Math.floor(totalPriceInCents / 100);
-  finalCents = totalPriceInCents % 100;
-}
-
-
-cartButton.onclick = () => {
-  updatePrice();
-
-
-  for (let index = 0; index < items.length; index++) {
-    if (items[index].quantity != 0) {
-      console.log(
-        "Item name: " +
-          items[index].name +
-          " - Quantity: " +
-          items[index].quantity
-      );
-    }
-  }
-
-  console.log(
-    "The total amount is " + finalDollars + "$ and " + finalCents + " cents"
-  );
 };
+
+}
+
+function updateCart()
+{
+    let cart=0;
+    for(let i=0;i<items.length;i++)
+    {
+        cart=cart+items[i].quantity;
+    }
+    cartValue.innerHTML=cart;
+
+}
+
+var totalDollars=0;
+var totalCents=0;
+
+function totalPrice(){
+    var totalINcents=0;
+    for(let i=0;i<items.length;i++)
+    {
+        totalINcents+= items[i].quantity*(items[i].dollars*100+items[i].cents)
+    }
+    totalDollars=Math.floor(totalINcents/100);
+    totalCents=totalINcents%100;
+}
+
+var wp="https://api.whatsapp.com/send?phone=+919446689603&text=Order%20details"
+function whatsapp()
+{
+    for(let i=0;i<items.length;i++)
+    {
+        if(items[i].quantity !=0)
+        {
+            wp+="%0A"+ items[i].name + "%20" + items[i].quantity;
+        }
+    }
+    wp+="%0A"+"Total%20Price:%20$"+ totalDollars+"%20"+totalCents + "c";
+}
+
+cartButton.onclick=()=>{
+    totalPrice();
+    whatsapp();
+    window.open(wp,"_blank");
+    for(i=0;i<items.length;i++)
+    {
+        if(items[i].quantity !=0)
+        {
+            console.log("Iron name: "+ items[i].name+ "-Quamtity: "+ item[i].quantity);
+        }
+    }
+    console.log("The total amount is: "+ totalDollars + "$'s and"+ totalCents+ "cents");
+ };
